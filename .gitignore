@@ -7,7 +7,7 @@
 *.suo
 *.user
 *.userosscache
-*.sln.docstates
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -242,10 +242,7 @@ UpgradeLog*.htm
 ServiceFabricBackup/
 *.rptproj.bak
 
-# SQL Server files
-*.mdf
-*.ldf
-*.ndf
+
 
 # Business Intelligence projects
 *.rdl.data
@@ -289,7 +286,7 @@ paket-files/
 
 # JetBrains Rider
 .idea/
-*.sln.iml
+
 
 # CodeRush
 .cr/

@@ -1,0 +1,130 @@
+﻿@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Editar</h2>
+
+
+@using (Html.BeginForm())
+{
+
+    <div class="form-horizontal">
+        @Html.Hidden("id", "")
+
+        <div class="form-group">
+            @Html.Label("Marca", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("Marca", "", new { @class = "form-control", @required = true })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Modelo", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("Modelo", "", new { @class = "form-control", @required = true })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Versao", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("Versao", "", new { @class = "form-control", @required = true })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Ano", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("Ano", "", new { @class = "form-control", @required = true, @type = "number" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Quilometragem", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("Quilometragem", "", new { @class = "form-control", @required = true, @type = "number" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Observacao", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("Observacao", "", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" id="btnSalvar" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        function getFormData($form) {
+            var unindexed_array = $form.serializeArray();
+            var indexed_array = {};
+
+            $.map(unindexed_array, function (n, i) {
+                indexed_array[n['name']] = n['value'];
+            });
+
+            return indexed_array;
+        }
+        var loadItem = function () {
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: "http://localhost:52593/api/anuncio/@ViewBag.id",
+                contentType: "application/json utf-8",
+                type: "get",
+                success: function (data) {
+                    console.log(JSON.stringify(data))
+                    $("#Marca").val(data.marca);
+                    $("#Modelo").val(data.modelo);
+                    $("#Ano").val(data.ano);
+                    $("#Versao").val(data.versao);
+                    $("#Quilometragem").val(data.quilometragem);
+                    $("#Observacao").val(data.observacao);
+                    $("#id").val('@ViewBag.id');
+                }
+            });
+        }
+        $(document).ready(function () {
+            loadItem();
+            $("#btnSalvar").on('click', function (e) {
+                e.preventDefault();
+                var data = getFormData($('form'));
+                console.log(data);
+                $.ajax({
+
+                    url: "http://localhost:52593/api/anuncio/@ViewBag.id",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    type: "PUT",
+                    data: JSON.stringify(data),
+                    success: function (data) {
+                        if (data.ok) {
+
+
+                            location.href = '@Url.Action("Index","Home")'
+                        } else {
+                            alert(data.msg)
+                        }
+                    }
+                });
+            })
+
+        })
+    </script>
+}
